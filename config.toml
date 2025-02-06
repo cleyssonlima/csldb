@@ -1,5 +1,5 @@
 ## Basic Configuration
-baseurl = "https://www.cslsolucoesembd.com.br/"
+baseurl = "https://www.csldb.com.br/"
 title = "CSLDB Soluções em Banco de Dados"
 languageCode = "en-us"
 contentdir = "src/content"
@@ -36,7 +36,7 @@ keywords = "cleyssonlima,blog,csldb,dba,postgresql,postgres,sql server,oracle,my
 github = "cleyssonlima"
 instagram = "pg_csldb"
 twitter = "pg_csldb"
-email = "cleyssonlima@csldb.com.br"
+email = "contatos@csldb.com.br"
 
 ## Extras
 [params.extra]
