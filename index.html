@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSLDB - Inteligência e Performance em Dados</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            --navy: #003358;
+            --silver: #a6a6a6;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --dark-text: #1a1a2e;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--navy);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--navy);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 51, 88, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: #004a7c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 51, 88, 0.4);
+        }
+        
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #e8e8e8;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 51, 88, 0.15);
+            border-color: var(--navy);
+        }
+        
+        .service-card:hover .card-icon {
+            background: var(--navy);
+            color: white;
+        }
+        
+        .card-icon {
+            transition: all 0.3s ease;
+            background: var(--light-gray);
+            color: var(--navy);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--navy) 0%, #005a8c 50%, #003358 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .input-field {
+            border: 2px solid #e8e8e8;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(0, 51, 88, 0.1);
+            outline: none;
+        }
+        
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+        
+        .stat-number {
+            background: linear-gradient(135deg, var(--navy), #005a8c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: var(--navy);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 51, 88, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: #004a7c;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 51, 88, 0.5);
+        }
+        
+        .back-to-top:active {
+            transform: translateY(-2px);
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background-color: #ffffff;"><!-- Header Fixo -->
+   <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background-color: #ffffff; border-bottom: 1px solid #e8e8e8;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-[70px]"><!-- Logo -->
+      <div class="logo-placeholder">
+       <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #003358;">
+        <svg class="w-6 h-6 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" /> <circle cx="12" cy="12" r="3" fill="white" />
+        </svg>
+       </div><span class="logo-text">CSLDB</span>
+      </div><!-- Navigation -->
+      <nav class="flex items-center gap-8"><a href="#consultoria" class="nav-link text-sm font-medium smooth-scroll" style="color: #1a1a2e;">Consultoria</a> <a href="#suporte" class="nav-link text-sm font-medium smooth-scroll" style="color: #1a1a2e;">Suporte</a> <a href="#cloud" class="nav-link text-sm font-medium smooth-scroll" style="color: #1a1a2e;">Cloud Services</a> <a href="#treinamentos" class="nav-link text-sm font-medium smooth-scroll" style="color: #1a1a2e;">Treinamentos</a> <a href="#contato" class="btn-primary px-5 py-2.5 rounded-lg text-sm font-semibold smooth-scroll">Contato</a>
+      </nav>
+     </div>
+    </div>
+   </header><!-- Hero Section -->
+   <section class="hero-gradient min-h-[600px] flex items-center pt-[70px] relative">
+    <div class="floating-shape w-32 h-32" style="top: 20%; left: 10%;"></div>
+    <div class="floating-shape w-48 h-48" style="top: 60%; right: 15%; animation-delay: -2s;"></div>
+    <div class="floating-shape w-24 h-24" style="bottom: 20%; left: 30%; animation-delay: -4s;"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+     <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);"><span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> <span class="text-white text-sm font-medium">Especialistas em PostgreSQL</span>
+      </div>
+      <h1 id="heroTitle" class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">CSLDB: Inteligência e Performance em Dados</h1>
+      <p id="heroSubtitle" class="text-lg sm:text-xl text-white/80 mb-8 leading-relaxed max-w-2xl">Transformamos a complexidade de bancos de dados em soluções simples e eficientes. Mais de 15 anos otimizando infraestruturas PostgreSQL para empresas de alta performance.</p>
+      <div class="flex flex-col sm:flex-row gap-4"><a href="#contato" id="ctaButton" class="px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 text-center smooth-scroll" style="background: #ffffff; color: #003358;"> Solicitar Diagnóstico </a> <a href="#consultoria" class="px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 border-2 border-white/30 text-white hover:bg-white/10 text-center smooth-scroll"> Conhecer Serviços </a>
+      </div><!-- Stats -->
+      <div class="grid grid-cols-3 gap-8 mt-16 pt-8 border-t border-white/10">
+       <div>
+        <div class="text-3xl sm:text-4xl font-bold text-white">
+         500+
+        </div>
+        <div class="text-white/60 text-sm mt-1">
+         Projetos Entregues
+        </div>
+       </div>
+       <div>
+        <div class="text-3xl sm:text-4xl font-bold text-white">
+         99.9%
+        </div>
+        <div class="text-white/60 text-sm mt-1">
+         Uptime Garantido
+        </div>
+       </div>
+       <div>
+        <div class="text-3xl sm:text-4xl font-bold text-white">
+         24/7
+        </div>
+        <div class="text-white/60 text-sm mt-1">
+         Suporte Ativo
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Services Section -->
+   <section id="consultoria" class="py-24" style="background-color: #f5f7fa;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16"><span class="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4" style="background: rgba(0,51,88,0.1); color: #003358;"> Nossos Serviços </span>
+      <h2 id="servicesTitle" class="text-3xl sm:text-4xl font-bold mb-4" style="color: #1a1a2e;">Soluç����es Completas em Banco de Dados</h2>
+      <p class="text-lg max-w-2xl mx-auto" style="color: #a6a6a6;">Da otimização à segurança, oferecemos expertise técnica de ponta para manter seus dados seguros e performáticos.</p>
+     </div>
+     <div class="grid md:grid-cols-3 gap-8"><!-- Card 1 -->
+      <div class="service-card rounded-2xl overflow-hidden" style="background: #ffffff;">
+       <div class="h-48 overflow-hidden"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&amp;h=400&amp;fit=crop" alt="Otimização de Queries" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" onerror="this.alt='Imagem não disponível'; this.style.display='none';">
+       </div>
+       <div class="p-8">
+        <div class="card-icon w-14 h-14 rounded-xl flex items-center justify-center mb-6">
+         <svg class="w-7 h-7" fill="currentColor" viewbox="0 0 24 24"><path d="M13 3v2h-2V3h2zm4 2v2h2V5h-2zm-8 0v2h2V5H9zM5 7h2v2H5V7zm14 0v2h-2V7h2zM7 9v2H5v-2h2zm10 0h2v2h-2V9zM5 13h2v-2H5v2zm12-2v2h2v-2h-2zM7 15H5v-2h2v2zm10 0h2v-2h-2v2zM9 17h2v2H9v-2zm4 0v2h2v-2h-2zm-4 4h2v-2H9v2zm4-2v2h2v-2h-2z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">Otimização de Queries</h3>
+        <p class="leading-relaxed mb-4" style="color: #a6a6a6;">Análise profunda e otimização de consultas SQL para máxima performance. Reduzimos tempo de execução em até 90%.</p><a href="#contato" class="inline-flex items-center gap-2 font-semibold text-sm" style="color: #003358;"> Saiba mais 
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+         </svg></a>
+       </div>
+      </div><!-- Card 2 -->
+      <div class="service-card rounded-2xl overflow-hidden" style="background: #ffffff;">
+       <div class="h-48 overflow-hidden"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&amp;h=400&amp;fit=crop" alt="Segurança &amp; Backup" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" onerror="this.alt='Imagem não disponível'; this.style.display='none';">
+       </div>
+       <div class="p-8">
+        <div class="card-icon w-14 h-14 rounded-xl flex items-center justify-center mb-6">
+         <svg class="w-7 h-7" fill="currentColor" viewbox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">Segurança &amp; Backup</h3>
+        <p class="leading-relaxed mb-4" style="color: #a6a6a6;">Proteção avançada com criptografia, controle de acesso e políticas de backup automatizadas e testadas.</p><a href="#contato" class="inline-flex items-center gap-2 font-semibold text-sm" style="color: #003358;"> Saiba mais 
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+         </svg></a>
+       </div>
+      </div><!-- Card 3 -->
+      <div class="service-card rounded-2xl overflow-hidden" style="background: #ffffff;">
+       <div class="h-48 overflow-hidden"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&amp;h=400&amp;fit=crop" alt="Suporte 24/7" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" onerror="this.alt='Imagem não disponível'; this.style.display='none';">
+       </div>
+       <div class="p-8">
+        <div class="card-icon w-14 h-14 rounded-xl flex items-center justify-center mb-6">
+         <svg class="w-7 h-7" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">Suporte 24/7</h3>
+        <p class="leading-relaxed mb-4" style="color: #a6a6a6;">Equipe especializada disponível 24 horas para emergências, manutenção preventiva e consultoria técnica.</p><a href="#contato" class="inline-flex items-center gap-2 font-semibold text-sm" style="color: #003358;"> Saiba mais 
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+         </svg></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Why Choose Us Section -->
+   <section id="suporte" class="py-24" style="background-color: #ffffff;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div><span class="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4" style="background: rgba(0,51,88,0.1); color: #003358;"> Por que a CSLDB? </span>
+       <h2 class="text-3xl sm:text-4xl font-bold mb-6" style="color: #1a1a2e;">Expertise que faz a diferença</h2>
+       <p class="text-lg mb-8" style="color: #a6a6a6;">Combinamos conhecimento técnico avançado com metodologias comprovadas para entregar resultados excepcionais.</p>
+       <div class="space-y-6">
+        <div class="flex gap-4">
+         <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(0,51,88,0.1);">
+          <svg class="w-6 h-6" fill="#003358" viewbox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1" style="color: #1a1a2e;">Certificações Oficiais</h4>
+          <p style="color: #a6a6a6;">Profissionais certificados PostgreSQL Database Administrator.</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(0,51,88,0.1);">
+          <svg class="w-6 h-6" fill="#003358" viewbox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1" style="color: #1a1a2e;">Metodologia Ágil</h4>
+          <p style="color: #a6a6a6;">Entregas incrementais com transparência total no processo.</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(0,51,88,0.1);">
+          <svg class="w-6 h-6" fill="#003358" viewbox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1" style="color: #1a1a2e;">SLA Garantido</h4>
+          <p style="color: #a6a6a6;">Compromisso contratual com tempo de resposta e resolução.</p>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="relative">
+       <div class="absolute inset-0 rounded-3xl transform rotate-3" style="background: linear-gradient(135deg, #003358, #005a8c);"></div>
+       <div class="relative rounded-3xl overflow-hidden shadow-2xl"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&amp;h=600&amp;fit=crop" alt="Equipe técnica especializada" class="w-full h-auto" loading="lazy" onerror="this.alt='Imagem não disponível'; this.parentElement.style.background='linear-gradient(135deg, #003358, #005a8c)'; this.style.display='none';">
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Cloud Services Section -->
+   <section id="cloud" class="py-24" style="background-color: #ffffff;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16"><span class="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4" style="background: rgba(0,51,88,0.1); color: #003358;"> Cloud Services </span>
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4" style="color: #1a1a2e;">PostgreSQL na Nuvem</h2>
+      <p class="text-lg max-w-2xl mx-auto" style="color: #a6a6a6;">Implantação, migração e gestão de PostgreSQL em ambientes cloud. Expertise em AWS, Azure e Google Cloud Platform.</p>
+     </div>
+     <div class="grid md:grid-cols-3 gap-8"><!-- AWS -->
+      <div class="service-card rounded-2xl p-8" style="background: #ffffff;">
+       <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #FF9900, #FF6600);">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335c-.072.048-.144.072-.208.072-.08 0-.16-.04-.239-.112-.096-.104-.184-.216-.256-.328-.072-.12-.144-.248-.224-.39-.56.66-1.263.99-2.095.99-.598 0-1.079-.17-1.431-.513-.353-.344-.528-.803-.528-1.382 0-.61.216-1.103.64-1.472.424-.37 1.016-.551 1.759-.551.24 0 .488.016.744.056.255.04.52.096.791.16v-.527c0-.55-.072-.936-.216-1.15-.144-.216-.423-.320-.815-.32-.176 0-.36.023-.544.064-.184.04-.36.096-.52.16-.08.04-.136.056-.184.072-.048.016-.08.024-.104.024-.096 0-.144-.072-.144-.216v-.335c0-.112.016-.2.056-.255.04-.056.104-.104.2-.144.176-.096.384-.176.624-.24.24-.072.504-.104.784-.104.6 0 1.04.136 1.319.416.279.279.423.71.423 1.294v1.703zm-2.895 1.087c.24 0 .488-.04.744-.128.255-.088.48-.24.663-.464.112-.144.2-.304.239-.48.04-.184.064-.383.064-.607v-.295c-.199-.048-.407-.08-.631-.104-.216-.024-.44-.032-.664-.032-.471 0-.815.096-1.039.288-.216.192-.328.464-.328.813 0 .328.08.576.248.752.168.184.408.257.704.257zm5.424.719c-.128 0-.215-.024-.271-.072-.057-.048-.104-.151-.145-.295l-1.599-5.263c-.032-.104-.048-.176-.048-.223 0-.088.04-.136.128-.136h.527c.128 0 .216.024.256.072.056.048.096.151.128.295l1.151 4.535 1.047-4.535c.024-.144.064-.247.12-.295.056-.048.151-.072.271-.072h.431c.128 0 .216.024.272.072.056.048.104.151.128.295l1.055 4.583 1.183-4.583c.032-.144.08-.247.128-.295.056-.048.144-.072.256-.072h.503c.088 0 .136.04.136.136 0 .032-.008.072-.016.12-.008.048-.024.112-.048.2l-1.631 5.263c-.04.144-.088.247-.144.295-.056.048-.144.072-.272.072h-.463c-.128 0-.216-.024-.272-.072-.056-.048-.104-.151-.128-.304l-1.039-4.319-1.031 4.319c-.024.144-.064.247-.128.304-.056.048-.144.072-.272.072h-.463zm8.663.183c-.352 0-.703-.04-1.055-.12-.352-.08-.615-.176-.775-.288-.096-.064-.16-.136-.184-.2-.024-.064-.04-.136-.04-.2v-.335c0-.144.056-.216.152-.216.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.56.208.855.264.304.056.6.08.903.08.48 0 .855-.088 1.119-.256.264-.176.4-.423.4-.743 0-.216-.064-.4-.2-.543-.136-.144-.4-.272-.775-.384l-1.111-.344c-.56-.176-.975-.423-1.223-.751-.248-.328-.368-.688-.368-1.087 0-.312.064-.591.2-.831.136-.24.32-.447.544-.615.224-.168.48-.295.775-.375.296-.088.607-.128.936-.128.144 0 .296.008.44.032.144.016.28.04.423.064.136.024.264.056.384.088.12.032.215.064.28.096.088.048.152.096.184.144.032.048.048.12.048.2v.319c0 .144-.056.224-.152.224-.064 0-.168-.032-.295-.096-.448-.208-.951-.312-1.511-.312-.44 0-.775.072-1.015.216-.24.144-.36.36-.36.663 0 .216.072.408.216.559.144.152.416.296.8.416l1.087.344c.552.176.951.415 1.191.727.24.312.36.679.36 1.103 0 .328-.064.615-.184.863-.128.248-.304.463-.528.639-.224.176-.496.304-.815.391-.312.096-.655.144-1.023.144z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">Amazon RDS &amp; Aurora</h3>
+       <p class="leading-relaxed" style="color: #a6a6a6;">Configuração e otimização de PostgreSQL em RDS e Aurora. Backup automatizado, alta disponibilidade e escalabilidade.</p>
+      </div><!-- Azure -->
+      <div class="service-card rounded-2xl p-8" style="background: #ffffff;">
+       <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #0078D4, #00BCF2);">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M10.67 4.17L5.71 15.11h3.84l-1.2 4.72 6.43-10.61h-3.69l2.58-5.05z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">Azure Database</h3>
+       <p class="leading-relaxed" style="color: #a6a6a6;">Gestão completa de PostgreSQL no Azure. Integração com serviços Microsoft e compliance empresarial.</p>
+      </div><!-- GCP -->
+      <div class="service-card rounded-2xl p-8" style="background: #ffffff;">
+       <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background: linear-gradient(135deg, #4285F4, #34A853);">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">Google Cloud SQL</h3>
+       <p class="leading-relaxed" style="color: #a6a6a6;">PostgreSQL otimizado na GCP. Performance superior com machine learning integrado e análise de dados avançada.</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Treinamentos Section -->
+   <section id="treinamentos" class="py-24" style="background-color: #003358;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"><span class="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4" style="background: rgba(255,255,255,0.1); color: #ffffff;"> Capacitação </span>
+     <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Treinamentos Especializados</h2>
+     <p class="text-lg text-white/70 max-w-2xl mx-auto mb-12">Cursos práticos ministrados por DBAs experientes. Do básico ao avançado em PostgreSQL.</p>
+     <div class="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <div class="p-6 rounded-2xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+       <div class="text-4xl font-bold text-white mb-2">
+        40h
+       </div>
+       <div class="text-white/60">
+        PostgreSQL Fundamentals
+       </div>
+      </div>
+      <div class="p-6 rounded-2xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+       <div class="text-4xl font-bold text-white mb-2">
+        60h
+       </div>
+       <div class="text-white/60">
+        PostgreSQL Advanced
+       </div>
+      </div>
+      <div class="p-6 rounded-2xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+       <div class="text-4xl font-bold text-white mb-2">
+        80h
+       </div>
+       <div class="text-white/60">
+        PostgreSQL Performance Tuning
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Contact Section -->
+   <section id="contato" class="py-24" style="background-color: #f5f7fa;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="grid lg:grid-cols-2 gap-16">
+      <div><span class="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4" style="background: rgba(0,51,88,0.1); color: #003358;"> Contato </span>
+       <h2 id="contactTitle" class="text-3xl sm:text-4xl font-bold mb-6" style="color: #1a1a2e;">Vamos conversar sobre seu projeto?</h2>
+       <p class="text-lg mb-8" style="color: #a6a6a6;">Preencha o formulário e nossa equipe entrará em contato em até 24 horas para um diagnóstico gratuito.</p>
+       <div class="space-y-4">
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: #003358;">
+          <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+          </svg>
+         </div>
+         <div>
+          <div class="text-sm" style="color: #a6a6a6;">
+           Email
+          </div>
+          <div class="font-semibold" style="color: #1a1a2e;">
+           cleyssondba@gmail.com
+          </div>
+         </div>
+        </div>
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: #003358;">
+          <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+          </svg>
+         </div>
+         <div>
+          <div class="text-sm" style="color: #a6a6a6;">
+           Telefone
+          </div>
+          <div class="font-semibold" style="color: #1a1a2e;">
+           (61) 9 8407-1875
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div>
+       <form id="contactForm" class="p-8 rounded-2xl shadow-xl" style="background: #ffffff;">
+        <div class="space-y-6">
+         <div><label for="name" class="block text-sm font-medium mb-2" style="color: #1a1a2e;">Nome Completo</label> <input type="text" id="name" name="name" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Seu nome">
+         </div>
+         <div><label for="email" class="block text-sm font-medium mb-2" style="color: #1a1a2e;">E-mail</label> <input type="email" id="email" name="email" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="seu@email.com">
+         </div>
+         <div><label for="message" class="block text-sm font-medium mb-2" style="color: #1a1a2e;">Mensagem</label> <textarea id="message" name="message" rows="4" required class="input-field w-full px-4 py-3 rounded-xl resize-none" placeholder="Descreva seu projeto ou necessidade..."></textarea>
+         </div><button type="submit" class="btn-primary w-full py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-3">
+          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+          </svg> Enviar via WhatsApp </button>
+        </div>
+       </form>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer style="background-color: #1a1a2e;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #003358;">
+        <svg class="w-6 h-6 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" /> <circle cx="12" cy="12" r="3" fill="white" />
+        </svg>
+       </div><span class="font-bold text-xl text-white">CSLDB</span>
+      </div>
+      <p id="footerText" class="text-sm" style="color: #a6a6a6;">© 2025 CSLDB - Todos os direitos reservados. Inteligência em Banco de Dados.</p>
+      <div class="flex gap-4">
+        <a href="https://www.linkedin.com/in/cleyssonlima/" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors" style="background: rgba(255,255,255,0.1);" aria-label="LinkedIn">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+        </svg></a> <a href="https://x.com/pg_csldb" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors" style="background: rgba(255,255,255,0.1);" aria-label="Twitter">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg></a> <a href="https://www.instagram.com/pg_csldb" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors" style="background: rgba(255,255,255,0.1);" aria-label="Instagram">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+        </svg></a> <a href="https://github.com/cleyssonlima" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors" style="background: rgba(255,255,255,0.1);" aria-label="GitHub">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+        </svg></a>
+      </div>
+     </div>
+    </div>
+   </footer><!-- Back to Top Button --> <button id="backToTop" class="back-to-top" aria-label="Voltar ao topo">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg></button>
+  </div>
+  <script>
+        // Default configuration
+        const defaultConfig = {
+            hero_title: 'CSLDB: Inteligência e Performance em Dados',
+            hero_subtitle: 'Transformamos a complexidade de bancos de dados em soluções simples e eficientes. Mais de 15 anos otimizando infraestruturas PostgreSQL para empresas de alta performance.',
+            cta_button: 'Solicitar Diagnóstico',
+            services_title: 'Soluções Completas em Banco de Dados',
+            contact_title: 'Vamos conversar sobre seu projeto?',
+            footer_text: '© 2016 CSLDB - Todos os direitos reservados. Inteligência em Banco de Dados.',
+            background_color: '#ffffff',
+            surface_color: '#f5f7fa',
+            text_color: '#1a1a2e',
+            primary_action: '#003358',
+            secondary_action: '#a6a6a6'
+        };
+        
+        let config = { ...defaultConfig };
+        
+        // Form submission handler - WhatsApp integration
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Format WhatsApp message
+            const whatsappMessage = `*Nova solicitação de contato*%0A%0A*Nome:* ${encodeURIComponent(name)}%0A*E-mail:* ${encodeURIComponent(email)}%0A*Mensagem:* ${encodeURIComponent(message)}`;
+            
+            // WhatsApp phone number (format: country code + number, no spaces or special characters)
+            // Example: 5561984071875 for Brazil (+55 61 98407-1875)
+            const whatsappNumber = '5561984071875';
+            
+            // Open WhatsApp in a new tab
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Smooth scroll for navigation links
+        function initSmoothScroll() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        const header = document.getElementById('header');
+                        const headerHeight = header ? header.offsetHeight : 70;
+                        const appWrapper = document.getElementById('app-wrapper');
+                        const targetPosition = targetSection.offsetTop - headerHeight;
+                        
+                        appWrapper.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // Initialize smooth scroll after a short delay to ensure DOM is ready
+        setTimeout(initSmoothScroll, 100);
+        
+        // Header scroll effect
+        let lastScroll = 0;
+        const appWrapper = document.getElementById('app-wrapper');
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        appWrapper.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            const currentScroll = appWrapper.scrollTop;
+            
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+            
+            // Show/hide back to top button
+            if (currentScroll > 400) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        // Back to top functionality
+        backToTopBtn.addEventListener('click', function() {
+            appWrapper.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Render function to update UI based on config
+        async function onConfigChange(cfg) {
+            config = { ...defaultConfig, ...cfg };
+            
+            // Update text content
+            document.getElementById('heroTitle').textContent = config.hero_title;
+            document.getElementById('heroSubtitle').textContent = config.hero_subtitle;
+            document.getElementById('ctaButton').textContent = config.cta_button;
+            document.getElementById('servicesTitle').textContent = config.services_title;
+            document.getElementById('contactTitle').textContent = config.contact_title;
+            document.getElementById('footerText').textContent = config.footer_text;
+            
+            // Update colors
+            document.getElementById('app-wrapper').style.backgroundColor = config.background_color;
+            document.getElementById('header').style.backgroundColor = config.background_color;
+            
+            // Update primary action buttons
+            const primaryButtons = document.querySelectorAll('.btn-primary');
+            primaryButtons.forEach(btn => {
+                btn.style.backgroundColor = config.primary_action;
+            });
+            
+            // Update text colors
+            const textElements = document.querySelectorAll('[style*="color: #1a1a2e"]');
+            textElements.forEach(el => {
+                el.style.color = config.text_color;
+            });
+            
+            // Update secondary/gray text
+            const secondaryTextElements = document.querySelectorAll('[style*="color: #a6a6a6"]');
+            secondaryTextElements.forEach(el => {
+                el.style.color = config.secondary_action;
+            });
+        }
+        
+        // Map config to capabilities
+        function mapToCapabilities(cfg) {
+            return {
+                recolorables: [
+                    {
+                        get: () => cfg.background_color || defaultConfig.background_color,
+                        set: (value) => {
+                            cfg.background_color = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+                        }
+                    },
+                    {
+                        get: () => cfg.surface_color || defaultConfig.surface_color,
+                        set: (value) => {
+                            cfg.surface_color = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ surface_color: value });
+                        }
+                    },
+                    {
+                        get: () => cfg.text_color || defaultConfig.text_color,
+                        set: (value) => {
+                            cfg.text_color = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+                        }
+                    },
+                    {
+                        get: () => cfg.primary_action || defaultConfig.primary_action,
+                        set: (value) => {
+                            cfg.primary_action = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ primary_action: value });
+                        }
+                    },
+                    {
+                        get: () => cfg.secondary_action || defaultConfig.secondary_action,
+                        set: (value) => {
+                            cfg.secondary_action = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ secondary_action: value });
+                        }
+                    }
+                ],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+        
+        // Map config to edit panel values
+        function mapToEditPanelValues(cfg) {
+            return new Map([
+                ['hero_title', cfg.hero_title || defaultConfig.hero_title],
+                ['hero_subtitle', cfg.hero_subtitle || defaultConfig.hero_subtitle],
+                ['cta_button', cfg.cta_button || defaultConfig.cta_button],
+                ['services_title', cfg.services_title || defaultConfig.services_title],
+                ['contact_title', cfg.contact_title || defaultConfig.contact_title],
+                ['footer_text', cfg.footer_text || defaultConfig.footer_text]
+            ]);
+        }
+        
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        } else {
+            onConfigChange(defaultConfig);
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c134515907e6502',t:'MTc2ODk2MTM3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
